@@ -37,7 +37,7 @@ function App() {
 
   return (
     <div className="flex flex-col items-center mt-20 transition-all duration-100">
-      <h1 className="text-6xl mb-5">Waveform Visualizer</h1>
+      <h1 className="text-6xl mb-5 text-center">Waveform Visualizer</h1>
       <h3 className="text-2xl mb-6 text-gray-400">
         Select a file to visualize its waveform.
       </h3>
