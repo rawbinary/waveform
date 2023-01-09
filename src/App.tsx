@@ -7,6 +7,7 @@ function App() {
     return <></>;
   }
 
+  const [waveStyle, setWaveStyle] = useState("sine");
   const [analyser, setAnalyser] = useState<AnalyserNode>();
 
   const handleFileSelect = async function (e: ChangeEvent<HTMLInputElement>) {
@@ -28,6 +29,10 @@ function App() {
     analyser.connect(audioContext.destination);
 
     setAnalyser(analyser);
+  };
+
+  const handleWaveStyleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setWaveStyle(e.target.value);
   };
 
   return (
@@ -56,8 +61,15 @@ function App() {
           </svg>
           Select Audio File
         </label>
+        <select
+          onChange={(e) => handleWaveStyleChange(e)}
+          className="block mt-3 px-2 py-2 text-gray-700 bg-white border border-gray-300 rounded shadow-sm w-60 text-center focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+        >
+          <option value="sine">Sine Wave</option>
+          <option value="bars">Bars</option>
+        </select>
       </div>
-      <WaveForm analyser={analyser} />
+      <WaveForm analyser={analyser} style={waveStyle} />
       <audio loop id="audio"></audio>
     </div>
   );
