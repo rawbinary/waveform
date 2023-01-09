@@ -27,8 +27,6 @@ function App() {
     source.connect(analyser);
     analyser.connect(audioContext.destination);
 
-    analyser.fftSize = 2048;
-
     setAnalyser(analyser);
   };
 
