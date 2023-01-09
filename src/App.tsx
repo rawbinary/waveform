@@ -1,5 +1,5 @@
-import { ChangeEvent } from "react";
-import WaveForm from "./components/WaveForm/WaveForm";
+import { ChangeEvent, useState } from "react";
+import WaveForm from "./components/WaveForm";
 
 function App() {
   if (!window.AudioContext) {
@@ -7,14 +7,22 @@ function App() {
     return <></>;
   }
 
-  const handleFileSelect = function (e: ChangeEvent<HTMLInputElement>) {
+  const [waveData, setWaveData] = useState<number[]>([0]);
+
+  const handleFileSelect = async function (e: ChangeEvent<HTMLInputElement>) {
     const audioFile = e.target.files?.item(0);
     if (!audioFile) return alert("Not a valid file selected.");
 
-    const audio = document.querySelector("#audio") as HTMLAudioElement;
-    audio.src = URL.createObjectURL(audioFile);
-    audio.load();
-    audio.play();
+    const audioContext = new AudioContext();
+    const audioBuffer = await audioContext.decodeAudioData(
+      await audioFile.arrayBuffer()
+    );
+    setWaveData(generateWaveform(audioBuffer));
+
+    // const audio = document.querySelector("#audio") as HTMLAudioElement;
+    // audio.src = URL.createObjectURL(audioFile);
+    // audio.load();
+    // audio.play();
   };
 
   return (
@@ -44,12 +52,29 @@ function App() {
           Select Audio File
         </label>
       </div>
-      <div>
-        <WaveForm />
-        <audio id="audio"></audio>
-      </div>
+      <WaveForm data={waveData} />
+      <audio loop id="audio"></audio>
     </div>
   );
 }
 
 export default App;
+
+// Since there's too many data points, we filter the channel data by normalizing it to the mean of a fixed chunk size
+function generateWaveform(audioBuffer: AudioBuffer) {
+  const audioData = audioBuffer.getChannelData(0);
+  const samples = 90;
+  const chunkSize = Math.floor(audioData.length / samples);
+  const filteredData = [];
+  for (let i = 0; i < samples; i++) {
+    let sum = 0;
+    for (let j = 0; j < chunkSize; j++) {
+      sum += Math.abs(audioData[chunkSize * i + j]);
+    }
+    filteredData.push(sum / chunkSize);
+  }
+
+  // normalizing it ot the max value
+  let m = Math.pow(Math.max(...filteredData), -1);
+  return filteredData.map((n) => n * m);
+}
