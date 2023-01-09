@@ -11,6 +11,7 @@ export default function WaveForm({ analyser }: WaveFormProps) {
 
     if (!analyser) return;
 
+    analyser.fftSize = 4096;
     const canvasCtx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
     const bufferLength = analyser.frequencyBinCount;
@@ -21,15 +22,15 @@ export default function WaveForm({ analyser }: WaveFormProps) {
       requestAnimationFrame(animate);
 
       analyser.getByteTimeDomainData(dataArray);
-
+      // analyser.getByteFrequencyData(dataArray);
       canvas.width = canvas.width;
       canvasCtx.translate(0, canvas.offsetHeight / 2); // Set Y = 0 to be in the middle of the canvas
       canvasCtx.lineWidth = 3;
-      canvasCtx.strokeStyle = "rgb(255, 255, 255)";
+      canvasCtx.strokeStyle = "#aaa";
 
       canvasCtx.beginPath();
 
-      const sliceWidth = (canvas.width * 1.0) / bufferLength;
+      const sliceWidth = Math.ceil(canvas.width / bufferLength);
       let x = 0;
 
       for (let i = 0; i < bufferLength; i++) {
@@ -45,7 +46,7 @@ export default function WaveForm({ analyser }: WaveFormProps) {
         x += sliceWidth;
       }
 
-      canvasCtx.lineTo(canvas.width + 10, canvas.offsetHeight / 2);
+      canvasCtx.lineTo(canvas.width, canvas.offsetHeight / 2);
       canvasCtx.stroke();
     };
 
@@ -67,10 +68,3 @@ export default function WaveForm({ analyser }: WaveFormProps) {
 type WaveFormProps = {
   analyser: AnalyserNode | undefined;
 };
-
-function setup(analyser: AnalyserNode) {
-  analyser.fftSize = 2048;
-
-  const bufferLength = analyser.frequencyBinCount;
-  const dataArray = new Uint8Array(bufferLength);
-}
