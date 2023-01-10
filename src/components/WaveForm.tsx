@@ -23,7 +23,7 @@ export default function WaveForm({ style }: WaveFormProps) {
       requestAnimationFrame(animate);
 
       canvas.width = canvas.width;
-      canvasCtx.translate(0, canvas.offsetHeight / 2 - 75); // Set Y = 0 to be in the middle of the canvas
+      canvasCtx.translate(0, canvas.offsetHeight / 2 - 115); // Set Y = 0 to be in the middle of the canvas
       animation(style)(analyser, canvas, canvasCtx, dataArray, bufferLength);
     };
 
