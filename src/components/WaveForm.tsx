@@ -1,15 +1,17 @@
 import { useEffect, useRef } from "react";
 import useSize from "../hooks/useSize";
+import { useAudioPlayerContext } from "../hooks/useAudioContext";
 
-export default function WaveForm({ analyser, style }: WaveFormProps) {
+export default function WaveForm({ style }: WaveFormProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [width, height] = useSize();
 
+  const { playing, analyser } = useAudioPlayerContext();
+
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
 
-    if (!analyser) return;
+    if (!playing || !canvas || !analyser) return;
 
     analyser.fftSize = 2048;
     const canvasCtx = canvas.getContext("2d") as CanvasRenderingContext2D;
@@ -21,12 +23,12 @@ export default function WaveForm({ analyser, style }: WaveFormProps) {
       requestAnimationFrame(animate);
 
       canvas.width = canvas.width;
-      canvasCtx.translate(0, canvas.offsetHeight / 2); // Set Y = 0 to be in the middle of the canvas
+      canvasCtx.translate(0, canvas.offsetHeight / 2 - 75); // Set Y = 0 to be in the middle of the canvas
       animation(style)(analyser, canvas, canvasCtx, dataArray, bufferLength);
     };
 
     animate();
-  }, [analyser, style]);
+  }, [playing, style]);
 
   return (
     <>
@@ -41,7 +43,7 @@ export default function WaveForm({ analyser, style }: WaveFormProps) {
 }
 
 type WaveFormProps = {
-  analyser: AnalyserNode | undefined;
+  // analyser: AnalyserNode | undefined;
   style: string;
 };
 
