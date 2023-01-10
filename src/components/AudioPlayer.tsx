@@ -22,6 +22,10 @@ export default function AudioPlayer({ track, style }: AudioPlayerProps) {
     startSeeking();
   };
 
+  audioRef.current.onpause = () => {
+    setPlaying(false);
+  };
+
   const startSeeking = () => {
     clearInterval(seekRef.current);
 
@@ -53,6 +57,8 @@ export default function AudioPlayer({ track, style }: AudioPlayerProps) {
   }, [track]);
 
   function doPlayPause(playing: boolean) {
+    if (!track) return;
+
     setPlaying(!playing);
     if (playing) return audioRef.current.pause();
     audioRef.current.play();
