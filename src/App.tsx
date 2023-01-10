@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import WaveForm from "./components/WaveForm";
+import AudioPlayer from "./components/AudioPlayer";
 
 function App() {
   if (!window.AudioContext) {
@@ -8,27 +8,16 @@ function App() {
   }
 
   const [waveStyle, setWaveStyle] = useState("sine");
-  const [analyser, setAnalyser] = useState<AnalyserNode>();
+
+  const [track, setTrack] = useState<
+    { title: string; src: string } | undefined
+  >(undefined);
 
   const handleFileSelect = async function (e: ChangeEvent<HTMLInputElement>) {
     const audioFile = e.target.files?.item(0);
     if (!audioFile) return alert("Not a valid file selected.");
 
-    const audio = document.querySelector("#audio") as HTMLAudioElement;
-    audio.src = URL.createObjectURL(audioFile);
-
-    audio.load();
-    audio.play();
-
-    const audioContext = new AudioContext();
-
-    const source = audioContext.createMediaElementSource(audio);
-    const analyser = audioContext.createAnalyser();
-
-    source.connect(analyser);
-    analyser.connect(audioContext.destination);
-
-    setAnalyser(analyser);
+    setTrack({ title: audioFile.name, src: URL.createObjectURL(audioFile) });
   };
 
   const handleWaveStyleChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -69,8 +58,7 @@ function App() {
           <option value="bars">Bars</option>
         </select>
       </div>
-      <WaveForm analyser={analyser} style={waveStyle} />
-      <audio loop id="audio"></audio>
+      <AudioPlayer track={track} style={waveStyle} />
     </div>
   );
 }
