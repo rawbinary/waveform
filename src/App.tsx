@@ -52,7 +52,7 @@ function App() {
         </label>
         <select
           onChange={(e) => handleWaveStyleChange(e)}
-          className="block mt-3 px-2 py-2 text-gray-700 bg-white border border-gray-300 rounded shadow-sm w-60 text-center focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+          className="block mt-3 px-2 py-2 text-gray-200 bg-stone-700 border border-stone-700 rounded shadow-sm w-60 text-center focus:outline-none focus:ring-primary-500 focus:border-primary-500"
         >
           <option value="sine">Sine Wave</option>
           <option value="bars">Bars</option>
