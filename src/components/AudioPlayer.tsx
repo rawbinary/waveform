@@ -1,14 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  AudioPlayerContext,
-  useAudioPlayerContext,
-} from "../hooks/useAudioContext";
+import { AudioPlayerContext } from "../hooks/useAudioContext";
 import WaveForm from "./WaveForm";
 
 export default function AudioPlayer({ track, style }: AudioPlayerProps) {
-  const { ctx } = useAudioPlayerContext();
-
-  const [analyser, setAnalyser] = useState<AnalyserNode>(ctx.createAnalyser());
+  const [analyser, setAnalyser] = useState<AnalyserNode>();
 
   const [playing, setPlaying] = useState(false);
   const [seek, setSeek] = useState(0);
@@ -43,6 +38,7 @@ export default function AudioPlayer({ track, style }: AudioPlayerProps) {
 
     const audio = (audioRef.current = new Audio());
 
+    let ctx = new AudioContext();
     const source = ctx.createMediaElementSource(audio);
     const analyser = ctx.createAnalyser();
 
@@ -64,7 +60,7 @@ export default function AudioPlayer({ track, style }: AudioPlayerProps) {
 
   return (
     <>
-      <AudioPlayerContext.Provider value={{ ctx, analyser, playing }}>
+      <AudioPlayerContext.Provider value={{ analyser, playing }}>
         <div className="fixed bottom-0 pt-3 px-5 w-full bg-stone-800 text-center shadow-lg">
           <h2 className="font-bold text-slate-400">
             {track ? track.title : "No audio selected."}
