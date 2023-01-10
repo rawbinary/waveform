@@ -52,6 +52,8 @@ export default function AudioPlayer({ track, style }: AudioPlayerProps) {
 
     audio.src = track.src;
     audio.load();
+
+    document.title = "Waveform - " + track.title;
   }, [track]);
 
   function doPlayPause(playing: boolean) {
