@@ -18,11 +18,9 @@ export default function AudioPlayer({ track, style }: AudioPlayerProps) {
   const seekRef = useRef<number>();
 
   audioRef.current.onloadedmetadata = () => {
-    // setting play states
-
     audioRef.current.play();
     console.log(audioRef.current.duration);
-    setDuration(Math.ceil(audioRef.current.duration));
+    setDuration(Math.floor(audioRef.current.duration));
     setPlaying(true);
 
     startSeeking();
@@ -64,11 +62,11 @@ export default function AudioPlayer({ track, style }: AudioPlayerProps) {
             style={{
               background: `linear-gradient(90deg, #777 ${Math.ceil(
                 (seek / duration) * 100
-              )}%, white ${Math.ceil((seek / duration) * 100)}%)`,
+              )}%, white ${(seek / duration) * 100}%)`,
             }}
             className="w-full mb-5 h-1 mt-1 rounded appearance-none bg-slate-500 cursor-pointer transition-all ease-linear"
             type="range"
-            value={Math.floor(seek)}
+            value={seek}
             step="1"
             min="0"
             max={duration}
