@@ -2,7 +2,7 @@
 
 Audio Waveform generator written in typescript. Generates **Sine Wave** on `TimeDomain` data and **Bars** on `Frequency` data using [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 
-**See Demo at: https://waveform.robin.md**
+**See Demo at: https://waveform.ruw.sh**
 
 ## Why?
 
